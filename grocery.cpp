@@ -90,7 +90,7 @@ class gradebook {
                 tempSave.erase(tempSave.end()-2, tempSave.end());
             }
             tempSave += "\n}";
-            ofstream MyFile("saved.dat");
+            ofstream MyFile("saved.txt");
             MyFile << tempSave;
             MyFile.close();
             cout << "List saved succesfully." << endl;
@@ -116,8 +116,10 @@ class gradebook {
     void parseJSON(string str) {
         str.erase(str.begin(), str.begin()+1);
         str.erase(str.end()-1);
-        string delimiter = ",";
-        data = split(str, delimiter);
+        if (str != "") {
+            string delimiter = ",";
+            data = split(str, delimiter);
+        }
     }
 
     vector<string> split(string trimmed, string delimiter) {
@@ -143,7 +145,7 @@ class gradebook {
     int run() {
         string myText;
         string fullText;
-        ifstream MyReadFile("saved.dat");
+        ifstream MyReadFile("saved.txt");
         while (getline (MyReadFile, myText)) {
             fullText += myText;
         }
