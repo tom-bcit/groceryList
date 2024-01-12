@@ -1,11 +1,13 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include <map>
 #include <fstream>
+#include <vector>
+#include <stdio.h>
 using namespace std;
 
 class gradebook {
-    vector<string> data;
+    map<string, string> data;
     public:void displayMenu() {
         cout << "\n\nGrocery List Main Menu" << endl;
         cout << "\n1) Add Item" << endl;
@@ -37,10 +39,14 @@ class gradebook {
 
     public:void addGrocery() {
         string groceryName = "";
+        string amount = "";
         cout << "Enter grocery name: ";
         cin.ignore();
         getline (cin, groceryName);
-        data.push_back(groceryName);
+        cout << "Enter amount: ";
+        cin.ignore();
+        getline (cin, amount);
+        data[groceryName] = amount;
     }
 
     public:void deleteGrocery() {
@@ -51,7 +57,7 @@ class gradebook {
         if (index == -1) {
             cout << "Could not delete. Grocery does not exist." << endl;
         } else {
-            data.erase(data.begin() + index);
+            data.erase(groceryName);
         }
     }
 
@@ -63,14 +69,17 @@ class gradebook {
         if (index == -1) {
             cout << "Could not find. Grocery does not exist." << endl;
         } else {
-            cout << "Details and options to go here" << endl;
+            cout << "\n\n\nGroceries           Amount" << endl;
         }
     }
 
     public:void displayAll() {
-        cout << ("\n\n\nGroceries           Amount") << endl;
-        for (string s: data) {
-            cout << s << endl;
+        cout << "\n\n\nGroceries           Amount" << endl;
+        map<string, string>::iterator iter;
+        for (iter = data.begin(); iter != data.end(); ++iter) {
+            string grocery = iter -> first;
+            string amount = iter -> second;
+            printf("%-20s%s", grocery.c_str(), amount.c_str());
         }
     }
 
@@ -82,8 +91,9 @@ class gradebook {
         getline (cin, selection);
         if (selection == "y") {
             tempSave += "{\n";
-            for (string s: data) {
-                tempSave += "\"" + s + "\"";
+            map<string, string>::iterator iter;
+            for (iter = data.begin(); iter != data.end(); ++iter) {
+                tempSave += "\"" + iter -> first + "\": " + iter-> second;
                 tempSave += ",\n";
             }
             if (!data.empty()) {
@@ -98,18 +108,11 @@ class gradebook {
     }    
 
     int search(string str) {
-        int counter = 0;
-        for (string s : data) {
-            if (s == str) {
-                break;
-            } else {
-                counter++;
-            }
-        }
-        if (counter == data.size()) {
+        map<string, string>::iterator counter = data.find(str);
+        if (counter == data.end()) {
             return -1;
         } else {
-            return counter;
+            return 0;
         }
     }
 
@@ -122,8 +125,9 @@ class gradebook {
         }
     }
 
-    vector<string> split(string trimmed, string delimiter) {
-        vector<string> temp;
+    map<string, string> split(string trimmed, string delimiter) {
+        map<string, string> temp;
+        vector<string> vec;
         size_t start = 0;
         size_t end = delimiter.length();
         size_t delimiter_length = delimiter.length();
@@ -131,13 +135,33 @@ class gradebook {
         while ((end = trimmed.find(delimiter, start)) != string::npos) {
             token = trimmed.substr(start, end - start);
             token.erase(token.begin());
-            token.erase(token.end() - 1);
+            cout << token << endl;
+            vec = splitSmall(token, "\": ");
+            
             start = end + delimiter_length;
-            temp.push_back(token);
+            temp[vec.at(0)] = vec.at(1);
         }
         token = trimmed.substr(start);
         token.erase(token.begin());
-        token.erase(token.end() - 1);
+        vec = splitSmall(token, "\": ");
+        temp[vec.at(0)] = vec.at(1);
+        
+        
+        return temp;
+    }
+
+    vector<string> splitSmall(string pair, string delimiter) {
+        vector<string> temp;
+        size_t start = 0;
+        size_t end = delimiter.length();
+        size_t delimiter_length = delimiter.length();
+        string token;
+        while ((end = pair.find(delimiter, start)) != string::npos) {
+            token = pair.substr(start, end - start);
+            start = end + delimiter_length;
+            temp.push_back(token);
+        }
+        token = pair.substr(start);
         temp.push_back(token);
         return temp;
     }
@@ -150,6 +174,7 @@ class gradebook {
             fullText += myText;
         }
         parseJSON(fullText);
+        map<string ,string> :: iterator it;
         int choice = 0;
         do {
             displayMenu();
