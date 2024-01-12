@@ -7,12 +7,13 @@ using namespace std;
 class gradebook {
     vector<string> data;
     public:void displayMenu() {
-        cout << "\n\n1) Add" << endl;
-        cout << "2) Delete" << endl;
-        cout << "3) Find" << endl;
+        cout << "\n\nGrocery List Main Menu" << endl;
+        cout << "\n1) Add Item" << endl;
+        cout << "2) Delete Item" << endl;
+        cout << "3) Find Item" << endl;
         cout << "4) Display All" << endl;
-        cout << "5) Save" << endl;        
-        cout << "6) Exit" << endl;
+        cout << "5) Save List" << endl;        
+        cout << "6) Exit Application" << endl;
     }
 
     public:int getChoice() {
@@ -67,7 +68,7 @@ class gradebook {
     }
 
     public:void displayAll() {
-        cout << "Groceries: " << endl;
+        cout << ("\n\n\nGroceries           Amount") << endl;
         for (string s: data) {
             cout << s << endl;
         }
@@ -89,7 +90,7 @@ class gradebook {
                 tempSave.erase(tempSave.end()-2, tempSave.end());
             }
             tempSave += "\n}";
-            ofstream MyFile("filename.txt");
+            ofstream MyFile("saved.dat");
             MyFile << tempSave;
             MyFile.close();
             cout << "List saved succesfully." << endl;
@@ -127,13 +128,15 @@ class gradebook {
         string token;
         while ((end = trimmed.find(delimiter, start)) != string::npos) {
             token = trimmed.substr(start, end - start);
+            token.erase(token.begin());
+            token.erase(token.end() - 1);
             start = end + delimiter_length;
             temp.push_back(token);
         }
-        temp.push_back (trimmed.substr(start));
-        for (auto i : temp) {
-            cout << i;
-        }
+        token = trimmed.substr(start);
+        token.erase(token.begin());
+        token.erase(token.end() - 1);
+        temp.push_back(token);
         return temp;
     }
 
@@ -144,7 +147,6 @@ class gradebook {
         while (getline (MyReadFile, myText)) {
             fullText += myText;
         }
-        cout << fullText;
         parseJSON(fullText);
         int choice = 0;
         do {
