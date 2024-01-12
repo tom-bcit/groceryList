@@ -39,14 +39,14 @@ class gradebook {
 
     public:void addGrocery() {
         string groceryName = "";
-        string amount = "";
+        string quantity = "";
         cout << "Enter grocery name: ";
         cin.ignore();
         getline (cin, groceryName);
-        cout << "Enter amount: ";
+        cout << "Enter quantity: ";
         cin.ignore();
-        getline (cin, amount);
-        data[groceryName] = amount;
+        getline (cin, quantity);
+        data[groceryName] = quantity;
     }
 
     public:void deleteGrocery() {
@@ -78,8 +78,8 @@ class gradebook {
         map<string, string>::iterator iter;
         for (iter = data.begin(); iter != data.end(); ++iter) {
             string grocery = iter -> first;
-            string amount = iter -> second;
-            printf("%-20s%s", grocery.c_str(), amount.c_str());
+            string quantity = iter -> second;
+            printf("%-20s%s", grocery.c_str(), quantity.c_str());
         }
     }
 
