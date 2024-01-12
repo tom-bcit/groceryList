@@ -67,7 +67,7 @@ class gradebook {
     }
 
     public:void displayAll() {
-        cout << "Grocerys: " << endl;
+        cout << "Groceries: " << endl;
         for (string s: data) {
             cout << s << endl;
         }
@@ -140,7 +140,7 @@ class gradebook {
     int run() {
         string myText;
         string fullText;
-        ifstream MyReadFile("filename.txt");
+        ifstream MyReadFile("saved.dat");
         while (getline (MyReadFile, myText)) {
             fullText += myText;
         }
