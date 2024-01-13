@@ -13,7 +13,7 @@ class gradebook {
         cout << "\n1) Add Item" << endl;
         cout << "2) Delete Item" << endl;
         cout << "3) Find Item" << endl;
-        cout << "4) Display All" << endl;
+        cout << "4) Display Full List" << endl;
         cout << "5) Save List" << endl;        
         cout << "6) Exit Application" << endl;
     }
@@ -22,9 +22,11 @@ class gradebook {
         int choice = 0;
         bool done = false;
         while (!done) {
-            cout << "Enter selection: " << endl;
+            cout << "Enter your selection as a number: " << endl;
             cin >> choice;
             if (cin.fail()) {
+                cin.clear();
+                cin.ignore();
                 cout << "Wrong input, please enter a number" <<endl;
             } else {
                 if (7 > choice > 0) {
@@ -78,6 +80,9 @@ class gradebook {
     }
 
     public:void displayAll() {
+        if (data.empty()) {
+            cout << "No items on your grocery list yet." << endl;
+        }
         cout << "\n\n\nGroceries           Amount" << endl;
         map<string, string>::iterator iter;
         for (iter = data.begin(); iter != data.end(); ++iter) {
