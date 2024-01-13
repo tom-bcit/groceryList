@@ -44,7 +44,6 @@ class gradebook {
         cin.ignore();
         getline (cin, groceryName);
         cout << "Enter quantity: ";
-        cin.ignore();
         getline (cin, quantity);
         data[groceryName] = quantity;
     }
@@ -53,11 +52,13 @@ class gradebook {
         string groceryName = "";        
         cout << "Enter grocery name: " << endl;
         cin >> groceryName;
-        int index = search(groceryName);
-        if (index == -1) {
+        if (data.find(groceryName) == data.end()) {
             cout << "Could not delete. Grocery does not exist." << endl;
         } else {
             data.erase(groceryName);
+            cout << "\"";
+            cout << groceryName;
+            cout << "\" deleted successfully." << endl;
         }
     }
 
@@ -65,11 +66,14 @@ class gradebook {
         string groceryName = "";
         cout << "Enter grocery name: " << endl;
         cin >> groceryName;
-        int index = search(groceryName);
-        if (index == -1) {
+        map<string, string>::iterator counter = data.find(groceryName);
+        if (counter == data.end()) {
             cout << "Could not find. Grocery does not exist." << endl;
         } else {
+            string grocery = counter -> first;
+            string quantity = counter -> second;
             cout << "\n\n\nGroceries           Amount" << endl;
+            printf("%-20s%s\n", grocery.c_str(), quantity.c_str());
         }
     }
 
@@ -79,7 +83,7 @@ class gradebook {
         for (iter = data.begin(); iter != data.end(); ++iter) {
             string grocery = iter -> first;
             string quantity = iter -> second;
-            printf("%-20s%s", grocery.c_str(), quantity.c_str());
+            printf("%-20s%s\n", grocery.c_str(), quantity.c_str());
         }
     }
 
@@ -93,7 +97,7 @@ class gradebook {
             tempSave += "{\n";
             map<string, string>::iterator iter;
             for (iter = data.begin(); iter != data.end(); ++iter) {
-                tempSave += "\"" + iter -> first + "\": " + iter-> second;
+                tempSave += "\"" + iter -> first + "\": \"" + iter-> second + "\"";
                 tempSave += ",\n";
             }
             if (!data.empty()) {
@@ -106,15 +110,6 @@ class gradebook {
             cout << "List saved succesfully." << endl;
         }
     }    
-
-    int search(string str) {
-        map<string, string>::iterator counter = data.find(str);
-        if (counter == data.end()) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
 
     void parseJSON(string str) {
         str.erase(str.begin(), str.begin()+1);
@@ -134,16 +129,19 @@ class gradebook {
         string token;
         while ((end = trimmed.find(delimiter, start)) != string::npos) {
             token = trimmed.substr(start, end - start);
+            // "abc": "def"
             token.erase(token.begin());
-            cout << token << endl;
-            vec = splitSmall(token, "\": ");
+            token.erase(token.end()-1);
+            // abc": "def
+            vec = splitSmall(token, "\": \"");
             
             start = end + delimiter_length;
             temp[vec.at(0)] = vec.at(1);
         }
         token = trimmed.substr(start);
         token.erase(token.begin());
-        vec = splitSmall(token, "\": ");
+        token.erase(token.end()-1);
+        vec = splitSmall(token, "\": \"");
         temp[vec.at(0)] = vec.at(1);
         
         
